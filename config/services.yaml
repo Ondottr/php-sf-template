@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
+parameters:
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+    autowire: true      # Automatically injects dependencies in your services.
+    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  _instanceof:
+    App\Abstraction\Interfaces\CustomPurgerInterface:
+      tags: [ 'app.fixture_purger' ]
+
+    PHP_SF\System\Classes\Abstracts\AbstractController:
+      tags: [ 'controller.service_arguments' ]
+
+  Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader:
+    alias: 'doctrine.fixtures.loader'
+
+  # Public alias so the PHP_SF framework can fetch the Twig environment from the
+  # container when rendering *.twig templates in PHP_SF controllers.
+  Twig\Environment:
+    alias: twig
+    public: true
+
+  app.cache.adapter.redis:
+    parent: 'cache.adapter.redis'
+    tags:
+      - { name: 'cache.pool', namespace: '%env(resolve:SERVER_PREFIX)%' }
+
+  # make classes in App/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../App/'
+    exclude:
+      - '../App/Http/Controller'
+      - '../App/Http/Middleware'
+
+  # Controllers registered separately with public: true so Router can resolve them via container->get()
+  App\Http\Controller\:
+    resource: '../App/Http/Controller/'
+    public: true
+      - '../App/DoctrineLifecycleCallbacks/'
+      - '../App/DependencyInjection/'
+      - '../App/Entity/'
+      - '../App/Router.php'
+      - '../App/Kernel.php'
+      - '../App/Helpers/'
+      - '../App/EventListeners/'
+      - '../App/Enums/'
+      - '../tests/'
+
+  App\Maker\:
+    resource: '../App/Maker/*'
+    tags: [ 'maker.command' ]
+    bind:
+      $commandLoader: '@console.command_loader'
+
+  PHP_SF\Framework\Routing\PhpSfRouteLoader:
+    arguments:
+      $controllersDir: '%kernel.project_dir%/App/Http/Controller'
+    tags:
+      - { name: routing.loader }
+
+when@dev:
+  services:
+    PHP_SF\System\Debug\QueryCounterMiddleware:
+      tags:
+        - { name: doctrine.middleware }
+
+when@test:
+  services:
+    PHP_SF\Framework\EventListener\PhpSfControllerListener:
+      tags:
+        - { name: kernel.event_subscriber }
+
+  # add more service definitions when explicit configuration is needed
+  # please note that last definitions always *replace* previous ones

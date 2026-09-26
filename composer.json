@@ -1,0 +1,138 @@
+{
+  "autoload": {
+    "psr-4": {
+      "App\\": "App/",
+      "App\\View\\": "templates/"
+    },
+    "files": [
+      "config/constants.php",
+      "functions/functions.php",
+      "functions/view_functions.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/",
+      "PHP_SF\\Tests\\": "Platform/tests/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true,
+    "allow-plugins": {
+      "symfony/flex": true,
+      "symfony/runtime": true,
+      "symfony/thanks": true,
+      "phpstan/extension-installer": true
+    }
+  },
+  "conflict": {
+    "symfony/symfony": "*"
+  },
+  "extra": {
+    "symfony": {
+      "allow-contrib": false,
+      "require": "^8.1"
+    }
+  },
+  "license": "ISC",
+  "minimum-stability": "stable",
+  "name": "nations-original/php-simple-framework-template",
+  "prefer-stable": true,
+  "replace": {
+    "symfony/polyfill-ctype": "*",
+    "symfony/polyfill-iconv": "*",
+    "symfony/polyfill-php72": "*"
+  },
+  "require": {
+    "php": "8.5.*",
+    "ext-amqp": "*",
+    "ext-apcu": "*",
+    "ext-ctype": "*",
+    "ext-curl": "*",
+    "ext-gd": "*",
+    "ext-http": "*",
+    "ext-iconv": "*",
+    "ext-intl": "*",
+    "ext-json": "*",
+    "ext-memcached": "*",
+    "ext-posix": "*",
+    "ext-redis": "*",
+    "ext-yaml": "*",
+    "ext-zend-opcache": "*",
+    "ext-zlib": "*",
+    "doctrine/doctrine-bundle": "^3.0",
+    "eftec/bladeone": "^4.19",
+    "nations-original/php-sf-cache": "^3.0",
+    "nations-original/php-simple-framework": "^4.0",
+    "nelmio/api-doc-bundle": "^5.9",
+    "php-amqplib/php-amqplib": "^3.6",
+    "phpdocumentor/reflection-docblock": "^6.0",
+    "phpstan/phpdoc-parser": "^2.3",
+    "predis/predis": "^3.4",
+    "psr/simple-cache": "^3.0",
+    "symfony/amqp-messenger": "^8.1",
+    "symfony/asset": "^8.1",
+    "symfony/console": "^8.1",
+    "symfony/dotenv": "^8.1",
+    "symfony/expression-language": "^8.1",
+    "symfony/flex": "^1.17|^2",
+    "symfony/form": "^8.1",
+    "symfony/framework-bundle": "^8.1",
+    "symfony/http-client": "^8.1",
+    "symfony/intl": "^8.1",
+    "symfony/messenger": "^8.1",
+    "symfony/mime": "^8.1",
+    "symfony/process": "^8.1",
+    "symfony/property-access": "^8.1",
+    "symfony/property-info": "^8.1",
+    "symfony/runtime": "^8.1",
+    "symfony/security-csrf": "^8.1",
+    "symfony/serializer": "^8.1",
+    "symfony/string": "^8.1",
+    "symfony/translation": "^8.1",
+    "symfony/twig-bundle": "^8.1",
+    "symfony/uid": "^8.1",
+    "symfony/validator": "^8.1",
+    "symfony/web-link": "^8.1",
+    "symfony/yaml": "^8.1",
+    "twig/extra-bundle": "^2.12|^3.0",
+    "twig/twig": "^3.20"
+  },
+  "require-dev": {
+    "codeception/codeception": "^5.3",
+    "codeception/module-asserts": "^3.3",
+    "codeception/module-symfony": "^3.8",
+    "codeception/module-webdriver": "^4.0",
+    "doctrine/doctrine-fixtures-bundle": "^4.3",
+    "friendsofphp/php-cs-fixer": "^3.94",
+    "phpstan/extension-installer": "^1.4",
+    "phpstan/phpstan": "^2.1",
+    "phpstan/phpstan-doctrine": "^2.0",
+    "phpstan/phpstan-symfony": "^2.0",
+    "phpunit/php-code-coverage": "^12",
+    "phpunit/phpunit": "^12",
+    "roave/security-advisories": "dev-latest",
+    "symfony/browser-kit": "^8.1",
+    "symfony/css-selector": "^8.1",
+    "symfony/debug-bundle": "^8.1",
+    "symfony/maker-bundle": "^1.43",
+    "symfony/phpunit-bridge": "^8.0",
+    "symfony/stopwatch": "^8.1",
+    "symfony/thanks": "^1.2",
+    "symfony/web-profiler-bundle": "^8.1",
+    "zenstruck/foundry": "^2.9"
+  },
+  "scripts": {
+    "stan": "phpstan analyse --no-progress",
+    "cs-fix": "php-cs-fixer fix",
+    "cs-check": "php-cs-fixer fix --dry-run --diff",
+    "auto-scripts": {
+      "cache:clear": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "authors": [
+    {
+      "name": "Dmytro Dyvulskyi",
+      "role": "CEO & Founder and Lead Developer of Nations Original",
+      "email": "dmytro.dyvulskyi@nations-original.com"
+    }
+  ],
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ]
+  },
+  "dependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^8.0.1",
+    "async": "^3.2.6",
+    "axios": "1.20.0",
+    "bootstrap": "^5.3.8",
+    "jquery": "^4.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.0.5",
+    "@babel/preset-env": "^8.0.5",
+    "babel-loader": "^10.1.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^7.1.5",
+    "dotenv": "^17.4.2",
+    "dotenv-webpack": "^9.0.0",
+    "glob": "^13.0.6",
+    "javascript-obfuscator": "^5.7.0",
+    "jest": "^30.5.1",
+    "mini-css-extract-plugin": "^2.10.2",
+    "prettier": "3.9.6",
+    "purgecss-webpack-plugin": "^8.0.0",
+    "sass": "^1.104.0",
+    "sass-loader": "^17.0.1",
+    "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.6.1",
+    "webpack": "5.110.3",
+    "webpack-cli": "^7.2.3",
+    "webpack-manifest-plugin": "^6.0.1",
+    "webpack-obfuscator": "^3.6.1"
+  },
+  "homepage": "https://github.com/Ondottr/PHP_SF_template/blob/master/README.md",
+  "main": "index.js",
+  "name": "@nations-original/php-simple-framework-template",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ondottr/PHP_SF_template.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack --watch --env mode=development --env cache=0 --progress",
+    "build": "webpack --env mode=production --env cache=1 --progress",
+    "test:unit": "jest --config ./jest.config.js"
+  }
+}

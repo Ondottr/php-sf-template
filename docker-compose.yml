@@ -1,0 +1,66 @@
+services:
+  memcached:
+    container_name: memcached_php_sf_playground_container
+    image: 'memcached:alpine'
+    ports:
+      - '7001:11211'
+
+  redis:
+    container_name: redis_php_sf_playground_container
+    image: 'redis:alpine'
+    ports:
+      - '7002:6379'
+
+  postgres:
+    container_name: postgres_php_sf_playground_container
+    image: 'postgres:16.10-alpine'
+    working_dir: /application
+    volumes:
+      - '.:/application'
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=php_sf_playground_db_postgresql
+    ports:
+      - '7003:5432'
+
+  rabbitmq:
+    container_name: rabbitmq_php_sf_playground_container
+    image: 'rabbitmq:4.0'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - '7004:5672'
+
+  mysql:
+    container_name: mysql_php_sf_playground_container
+    image: 'mysql:9.4.0'
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=php_sf_playground_db_mysql
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - './docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql'
+    ports:
+      - '7005:3306'
+
+  mariadb:
+    container_name:    mariadb_php_sf_playground_container
+    image: 'mariadb:12.2.2'
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=php_sf_playground_db_mariadb
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    volumes:
+      - './docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql'
+    ports:
+      - '7006:3306'
+
+  selenium:
+    container_name: selenium_php_sf_playground_container
+    image: 'selenium/standalone-firefox:latest'
+    network_mode: host  # shares host network stack; Firefox reaches 127.0.0.1:7000 directly
+    shm_size: '2gb'

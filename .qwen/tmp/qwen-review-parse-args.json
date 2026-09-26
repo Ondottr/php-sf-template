@@ -1,0 +1,22 @@
+{
+  "target": {
+    "type": "pr-number",
+    "number": 104
+  },
+  "effort": "high",
+  "effortSource": "default",
+  "comment": {
+    "requested": false,
+    "effective": false
+  },
+  "fix": {
+    "requested": true,
+    "effective": false
+  },
+  "extraTokens": [],
+  "unknownFlags": [],
+  "warnings": [
+    "Warning: `--fix` flag is ignored because a PR review runs in an ephemeral worktree that is deleted when the review ends — there is no durable tree to fix. Use `--comment` to publish the findings instead.",
+    "Invalid --effort value \"medius\" discarded; using the default effort."
+  ]
+}
