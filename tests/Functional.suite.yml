@@ -1,0 +1,20 @@
+# Codeception Test Suite Configuration
+#
+# Suite for functional tests
+# Emulate web requests and make application process them
+# Include one of framework modules (Symfony2, Yii2, Laravel5) to use it
+# Remove this suite if you don't use frameworks
+
+actor: FunctionalTester
+modules:
+    enabled:
+        - Symfony:
+            app_path: 'App'
+            environment: 'test'
+            follow_redirects: false
+#        - Doctrine2:
+#            depends: Symfony
+#            cleanup: true
+        - Asserts
+        - \Tests\Support\Helper\Functional
+bootstrap: ../bootstrap.php

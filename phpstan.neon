@@ -1,0 +1,35 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 6
+
+    paths:
+        - App/
+        - tests
+
+    excludePaths:
+        - var
+        - vendor
+        - migrations (?)
+        # Codeception scaffolding — auto-generated actor stubs, not real code
+        - tests/Support
+
+    scanDirectories:
+        - Platform/src/
+
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+
+    doctrine:
+        objectManagerLoader: phpstan-doctrine-loader.php
+
+    ignoreErrors: []
+
+    treatPhpDocTypesAsCertain: false
+
+    dynamicConstantNames:
+        - DEV_MODE

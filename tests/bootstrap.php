@@ -1,0 +1,46 @@
+<?php declare(strict_types=1);
+
+use App\Entity\Main\User;
+use PHP_SF\Framework\Http\Middleware\auth;
+use PHP_SF\Framework\Http\Middleware\csrf;
+use PHP_SF\System as PHP_SF;
+use PHP_SF\System\Router;
+use PHP_SF\Templates\Layout\footer;
+use PHP_SF\Templates\Layout\header;
+use Symfony\Component\Dotenv\Dotenv;
+
+defined('start_time') || define('start_time', microtime(true));
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Tests pass arbitrary/DB-derived keys to _t() (e.g. game_setting.*). DEV_MODE
+// auto-discovery would otherwise persist a {key}_not_translated placeholder into the
+// committed translation files on every run — disable it so suites never mutate YAML.
+\PHP_SF\System\Core\TranslatorV2::setAutoWriteMissingKeys(false);
+
+// PHPUnit sets APP_ENV=test via phpunit.xml.dist <server> before this runs.
+// Codeception does not, so we default it here so bootEnv('.env') picks up .env.test.
+$_SERVER['APP_ENV'] ??= 'test';
+$_ENV['APP_ENV'] ??= 'test';
+
+// Boot from .env (not .env.test) so all base vars (Redis, DB hosts, …) are loaded
+// first; bootEnv then also loads .env.test because APP_ENV=test.
+(new Dotenv())->bootEnv(__DIR__ . '/../.env');
+
+$kernel = (new PHP_SF\Kernel())
+    ->addTranslationFiles(__DIR__ . '/../translations')
+    ->addControllers(__DIR__ . '/../App/Http/Controller')
+    ->addEventSubscriberDirectory(__DIR__ . '/../App/EventSubscriber')
+    ->setApplicationUserClassName(User::class)
+    ->addTemplatesDirectory('templates', 'App\View')
+;
+PHP_SF\Kernel::setHeaderTemplateClassName(header::class);
+PHP_SF\Kernel::setFooterTemplateClassName(footer::class);
+
+Router::loadRoutesOnly($kernel);
+
+auth::logInUser();
+Router::addGlobalMiddleware(csrf::class);
+
+/** @noinspection GlobalVariableUsageInspection */
+$GLOBALS['kernel'] = $kernel;

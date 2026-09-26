@@ -1,0 +1,40 @@
+# Doctrine configuration
+#
+# WARNING: The default connection and entity manager are deliberately set to a non-functional
+# "dummy" placeholder. Any code that accidentally uses the default connection will fail fast
+# and loudly, forcing explicit use of the named connections.
+#
+# All database access MUST use explicitly named entity managers, e.g.:
+#   em('main'), em('blog'), em('payments')
+#
+# Run init.sh to add real connections and generate entity/repository directories.
+# If not, DO NOT change the default_connection or default_entity_manager, that WILL NOT WORK and will cause failures.
+
+doctrine:
+    dbal:
+        default_connection: dummy
+        connections:
+            dummy:
+                driver_class: PHP_SF\System\Doctrine\ForbiddenDriver
+
+    orm:
+        default_entity_manager: dummy
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        proxy_namespace: Proxies
+        entity_managers:
+            dummy:
+                connection: dummy
+                mappings:
+                    Dummy:
+                        is_bundle: false
+                        type: attribute
+                        dir: '%kernel.project_dir%/App/Entity/Dummy'
+                        prefix: App\Entity\Dummy
+                        alias: Dummy
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'

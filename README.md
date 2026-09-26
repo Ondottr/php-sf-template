@@ -1,0 +1,180 @@
+# Simple Framework (SF) — Template
+
+The official project template for [Simple Framework](https://github.com/nations-original/sf). Bootstrap a full working application in one command.
+
+**Package:** `nations-original/sf-template`
+**License:** ISC
+**Author:** Dmytro Dyvulskyi — CEO & Lead Developer, Nations Original
+
+---
+
+## Documentation
+
+Full documentation is available at **[wiki.nations-original.com/framework](https://wiki.nations-original.com/framework)**.
+
+| Section                                                                        | Topics                                                                  |
+|--------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| [Getting Started](https://wiki.nations-original.com/framework/getting-started) | Installation, constants, creating your first page                       |
+| [Core](https://wiki.nations-original.com/framework/core)                       | Lifecycle, controllers, routing, middleware, views, sessions, redirects |
+| [Dual Kernel](https://wiki.nations-original.com/framework/core/dual-kernel)    | SF kernel + Symfony kernel coexistence, bootstrap order             |
+| [Data & Persistence](https://wiki.nations-original.com/framework/data)         | Entities, repositories, validation, cache, fixtures, enums              |
+| [Infrastructure](https://wiki.nations-original.com/framework/infrastructure)   | Docker, Redis, RabbitMQ, template cache, kernel config                  |
+| [Supporting Features](https://wiki.nations-original.com/framework/supporting)  | Helper functions, translation, events, CRUD controller                  |
+| [Development & Testing](https://wiki.nations-original.com/framework/dev)       | PHPUnit, Codeception, dev mode                                          |
+| [Frontend](https://wiki.nations-original.com/framework/frontend)               | Asset building with Webpack                                             |
+
+---
+
+## Requirements
+
+**Required:**
+- PHP **8.3+** with extensions: `apcu`, `curl`, `gd`, `intl`, `redis`, `yaml`, `opcache`
+- Composer 2.x
+- Node.js 18+ with yarn
+- Redis (routing cache and application cache)
+- At least one database: PostgreSQL 15+ / MySQL / MariaDB
+
+**Optional:**
+- `ext-amqp` + RabbitMQ — only if you use message queues
+- `ext-memcached` — only if you use Memcached as a cache backend
+- Docker — `docker-compose.yml` provided for all services
+- Symfony CLI — used by `run.sh` for HTTPS local dev
+
+---
+
+## Installation
+
+```bash
+composer create-project nations-original/sf-template my-app
+cd my-app
+./init.sh
+```
+
+`init.sh` runs once per project — it configures database connections, generates `.env` and `config/constants.php`, creates entity/repository directories, and builds frontend assets.
+
+For subsequent machines cloning an already-configured project:
+```bash
+./install.sh
+```
+
+Full setup details: [Installation guide](https://wiki.nations-original.com/framework/getting-started/installation).
+
+---
+
+## Project Structure
+
+```
+App/
+├── Http/
+│   ├── Controller/          # SF attribute-routed controllers
+│   ├── SymfonyControllers/  # Native Symfony controllers (fallback)
+│   └── Middleware/          # Custom middleware
+├── Entity/                  # Doctrine entities, created by init.sh per connection
+├── Repository/              # Entity repositories, created by init.sh per connection
+├── DataFixtures/            # Doctrine fixtures (per connection)
+├── Enums/                   # Application enums
+├── DoctrineLifecycleCallbacks/
+└── Kernel.php               # App kernel (extends Symfony Kernel)
+config/
+├── constants.php            # App-level constants (not committed — copy from .example)
+├── packages/                # Symfony bundle config (doctrine, messenger, cache, …)
+└── routes.yaml              # Symfony controller route import
+templates/                   # PHP view classes (App\View\ namespace)
+templates_twig/              # Twig templates
+templates_blade/             # Blade templates
+lang/                        # Translation files
+public/                      # Web root
+```
+
+---
+
+## Template Engines
+
+SF controllers render views through three interchangeable engines — pick per route, mix freely in one app:
+
+| Engine               | Template reference               | Location         |
+|----------------------|----------------------------------|------------------|
+| Plain PHP class view | `welcome_page::class`            | `templates/`     |
+| Twig                 | `'example/page.html.twig'`       | `templates_twig/` |
+| Blade                | `'example/page.blade.php'`       | `templates_blade/` |
+
+```php
+return $this->render('example/page.html.twig', ['user' => $user]); // Twig
+return $this->render('example/page.blade.php', ['user' => $user]); // Blade
+return $this->render(welcome_page::class, ['user' => $user]);      // PHP class view
+```
+
+By default engine templates render as **fragments inside the app header/footer layout**, just like class views. When a template provides its own full-page layout (Twig `{% extends %}` / Blade `@extends`), pass `useLayout: false`:
+
+```php
+return $this->render('example/landing.html.twig', useLayout: false);
+```
+
+Class views can include engine partials via `$this->import('example/_partial.html.twig')`.
+
+Notes:
+
+- Twig templates use the Symfony-configured environment (paths and cache in `config/packages/twig.yaml`). SF helpers (`pageTitle()`, `csrf_token()`, `manifest_asset()`, `manifest_has()`, `_t()`, `route_link()`) are exposed by `App\Twig\PhpSfHelpersExtension`.
+- Blade is provided by the dependency-free [BladeOne](https://github.com/EFTEC/BladeOne) compiler: standard Blade directives work, Laravel-specific integrations (`<x-*>` components, `@props`) do not. `@csrf` and `@error` are wired to the framework's CSRF token and error bag.
+- Example routes: `/example/twig`, `/example/twig/standalone`, `/example/blade`, `/example/mixed`.
+
+---
+
+## Database Setup
+
+The template ships with only a dummy (default) entity manager that fails fast to prevent accidental cross-DB access. `init.sh` adds your real connections interactively — you can configure one or more, with any supported engine.
+
+Once configured, the standard Doctrine commands work per-connection using `--em=<name>`:
+
+```bash
+bin/console doctrine:database:create --if-not-exists --em=<name>
+bin/console doctrine:schema:create --em=<name>
+bin/console doctrine:fixtures:load --no-interaction --em=<name>
+```
+
+At minimum you need one connection and one `User` entity (also generated by `init.sh`) — the framework requires it for authentication and session handling.
+
+---
+
+## Development
+
+```bash
+./run.sh              # Start dev server on port 7000 (uses Symfony CLI if available)
+bin/console           # Symfony console
+npm run dev           # Frontend dev build with watch
+npm run build         # Frontend production build
+docker-compose up -d  # Start all infrastructure services
+```
+
+### Infrastructure services (Docker)
+
+| Service    | Port |
+|------------|------|
+| PostgreSQL | 7003 |
+| MySQL      | 7005 |
+| MariaDB    | 7006 |
+| Redis      | 7002 |
+| Memcached  | 7001 |
+| RabbitMQ   | 7004 |
+| Selenium   | 4444 |
+
+Full reference: [Docker & Local Environment](https://wiki.nations-original.com/framework/infrastructure/docker).
+
+---
+
+## Testing
+
+Tests are written with Codeception (Unit, Functional, Acceptance suites).
+
+```bash
+vendor/bin/codecept run            # Run all suites
+vendor/bin/codecept run Functional # Run specific suite
+```
+
+Full reference: [Codeception](https://wiki.nations-original.com/framework/dev/codeception).
+
+---
+
+## License
+
+ISC — see [LICENSE.MD](LICENSE.MD).
