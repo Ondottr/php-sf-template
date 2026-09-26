@@ -1,8 +1,8 @@
-# PHP Simple Framework — Template
+# Simple Framework (SF) — Template
 
-The official project template for [PHP Simple Framework](https://github.com/Ondottr/PHP_SF_Platform). Bootstrap a full working application in one command.
+The official project template for [Simple Framework](https://github.com/nations-original/sf). Bootstrap a full working application in one command.
 
-**Package:** `nations-original/php-simple-framework-template`
+**Package:** `nations-original/sf-template`
 **License:** ISC
 **Author:** Dmytro Dyvulskyi — CEO & Lead Developer, Nations Original
 
@@ -16,7 +16,7 @@ Full documentation is available at **[wiki.nations-original.com/framework](https
 |--------------------------------------------------------------------------------|-------------------------------------------------------------------------|
 | [Getting Started](https://wiki.nations-original.com/framework/getting-started) | Installation, constants, creating your first page                       |
 | [Core](https://wiki.nations-original.com/framework/core)                       | Lifecycle, controllers, routing, middleware, views, sessions, redirects |
-| [Dual Kernel](https://wiki.nations-original.com/framework/core/dual-kernel)    | PHP_SF kernel + Symfony kernel coexistence, bootstrap order             |
+| [Dual Kernel](https://wiki.nations-original.com/framework/core/dual-kernel)    | SF kernel + Symfony kernel coexistence, bootstrap order             |
 | [Data & Persistence](https://wiki.nations-original.com/framework/data)         | Entities, repositories, validation, cache, fixtures, enums              |
 | [Infrastructure](https://wiki.nations-original.com/framework/infrastructure)   | Docker, Redis, RabbitMQ, template cache, kernel config                  |
 | [Supporting Features](https://wiki.nations-original.com/framework/supporting)  | Helper functions, translation, events, CRUD controller                  |
@@ -45,7 +45,7 @@ Full documentation is available at **[wiki.nations-original.com/framework](https
 ## Installation
 
 ```bash
-composer create-project nations-original/php-simple-framework-template my-app
+composer create-project nations-original/sf-template my-app
 cd my-app
 ./init.sh
 ```
@@ -66,7 +66,7 @@ Full setup details: [Installation guide](https://wiki.nations-original.com/frame
 ```
 App/
 ├── Http/
-│   ├── Controller/          # PHP_SF attribute-routed controllers
+│   ├── Controller/          # SF attribute-routed controllers
 │   ├── SymfonyControllers/  # Native Symfony controllers (fallback)
 │   └── Middleware/          # Custom middleware
 ├── Entity/                  # Doctrine entities, created by init.sh per connection
@@ -90,7 +90,7 @@ public/                      # Web root
 
 ## Template Engines
 
-PHP_SF controllers render views through three interchangeable engines — pick per route, mix freely in one app:
+SF controllers render views through three interchangeable engines — pick per route, mix freely in one app:
 
 | Engine               | Template reference               | Location         |
 |----------------------|----------------------------------|------------------|
@@ -114,7 +114,7 @@ Class views can include engine partials via `$this->import('example/_partial.htm
 
 Notes:
 
-- Twig templates use the Symfony-configured environment (paths and cache in `config/packages/twig.yaml`). PHP_SF helpers (`pageTitle()`, `csrf_token()`, `manifest_asset()`, `manifest_has()`, `_t()`, `route_link()`) are exposed by `App\Twig\PhpSfHelpersExtension`.
+- Twig templates use the Symfony-configured environment (paths and cache in `config/packages/twig.yaml`). SF helpers (`pageTitle()`, `csrf_token()`, `manifest_asset()`, `manifest_has()`, `_t()`, `route_link()`) are exposed by `App\Twig\PhpSfHelpersExtension`.
 - Blade is provided by the dependency-free [BladeOne](https://github.com/EFTEC/BladeOne) compiler: standard Blade directives work, Laravel-specific integrations (`<x-*>` components, `@props`) do not. `@csrf` and `@error` are wired to the framework's CSRF token and error bag.
 - Example routes: `/example/twig`, `/example/twig/standalone`, `/example/blade`, `/example/mixed`.
 
